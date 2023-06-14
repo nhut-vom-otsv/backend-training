@@ -15,6 +15,8 @@ import { TokensModule } from './modules/tokens/tokens.module';
 import { RedisModule } from './modules/redis/redis.module';
 import { FavoriteModule } from './modules/favorites/favorites.module';
 import { Favorite } from './modules/favorites/favorite.entity';
+import { CartsModule } from './modules/carts/carts.module';
+import { Cart } from './modules/carts/cart.entity';
 
 @Module({
   imports: [
@@ -35,7 +37,7 @@ import { Favorite } from './modules/favorites/favorite.entity';
           port: appConfigService.postgresPort,
           dialect: appConfigService.postgresDialect,
           autoLoadModels: true,
-          models: [User, Category, Product, Favorite],
+          models: [User, Category, Product, Favorite, Cart],
         };
       },
       inject: [AppConfigService],
@@ -43,6 +45,7 @@ import { Favorite } from './modules/favorites/favorite.entity';
     TokensModule,
     RedisModule,
     FavoriteModule,
+    CartsModule,
   ],
   providers: [CloudinaryService],
 })
