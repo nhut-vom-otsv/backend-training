@@ -1,6 +1,6 @@
 import { Column, DataType, ForeignKey, Table } from 'sequelize-typescript';
-import { TimestampBaseModel } from 'src/constants/base-entities/timestamp.entity';
 import { User } from '../users/user.entity';
+import { TimestampBaseModel } from 'src/shared';
 
 @Table({ tableName: 'addresses' })
 export class Address extends TimestampBaseModel<Address> {

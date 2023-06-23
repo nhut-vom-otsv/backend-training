@@ -10,23 +10,24 @@ export class AddressesService {
     private addressModel: typeof Address,
   ) {}
 
-  async createAddress(
-    userId: string,
-    addressDto: AddressDto,
-  ): Promise<Address> {
+  create(userId: string, addressDto: AddressDto): Promise<Address> {
     return this.addressModel.create({ ...addressDto, userId });
   }
 
-  async getAddressesByUserId(userId: string): Promise<Address[]> {
+  getListByUserId(userId: string): Promise<Address[]> {
     return this.addressModel.findAll({ where: { userId } });
   }
 
-  async updateAddress(id: string, addressDto: AddressDto) {
+  get(id: string): Promise<Address> {
+    return this.addressModel.findOne({ where: { id } });
+  }
+
+  async update(id: string, addressDto: AddressDto) {
     await this.addressModel.update(addressDto, { where: { id } });
     return this.addressModel.findOne({ where: { id } });
   }
 
-  async deleteAddress(id: string): Promise<void> {
-    await this.addressModel.destroy({ where: { id } });
+  delete(id: string): Promise<number> {
+    return this.addressModel.destroy({ where: { id } });
   }
 }
