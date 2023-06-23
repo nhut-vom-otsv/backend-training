@@ -6,38 +6,60 @@ import {
   Delete,
   Param,
   Body,
+  UseGuards,
+  UnauthorizedException,
 } from '@nestjs/common';
-import { AddressesService } from './addresses.service';
+import { UserData } from 'src/decorators/user-data.decorator';
+import { AddressesService as AddressService } from './addresses.service';
 import { AddressDto } from './dto/address.dto';
 import { Address } from './address.entity';
+import { JwtAuthGuard } from 'src/middleware/guards/jwt-auth.guard';
 
 @Controller('addresses')
-export class AddressesController {
-  constructor(private readonly addressesService: AddressesService) {}
+export class AddressController {
+  constructor(private readonly addressesService: AddressService) {}
 
-  @Post(':userId')
-  async createAddress(
+  @UseGuards(JwtAuthGuard)
+  @Post()
+  create(
     @Body() addressDto: AddressDto,
-    @Param('userId') userId: string,
+    @UserData('id') userId: string,
   ): Promise<Address> {
-    return this.addressesService.createAddress(userId, addressDto);
+    return this.addressesService.create(userId, addressDto);
   }
 
-  @Get(':userId')
-  async getAddressById(@Param('userId') userId: string): Promise<Address[]> {
-    return this.addressesService.getAddressesByUserId(userId);
+  @UseGuards(JwtAuthGuard)
+  @Get(':id')
+  async get(
+    @UserData('id') userId: string,
+    @Param('id') id: string,
+  ): Promise<Address> {
+    const address = await this.addressesService.get(id);
+
+    if (address.userId !== userId)
+      throw new UnauthorizedException('Invalid user');
+
+    return address;
   }
 
+  @UseGuards(JwtAuthGuard)
+  @Get()
+  getByUserId(@UserData('id') userId: string): Promise<Address[]> {
+    return this.addressesService.getListByUserId(userId);
+  }
+
+  @UseGuards(JwtAuthGuard)
   @Patch(':id')
-  async updateAddress(
+  update(
     @Param('id') id: string,
     @Body() addressDto: AddressDto,
   ): Promise<Address> {
-    return this.addressesService.updateAddress(id, addressDto);
+    return this.addressesService.update(id, addressDto);
   }
 
+  @UseGuards(JwtAuthGuard)
   @Delete(':id')
-  async deleteAddress(@Param('id') id: string): Promise<void> {
-    return this.addressesService.deleteAddress(id);
+  delete(@Param('id') id: string): Promise<number> {
+    return this.addressesService.delete(id);
   }
 }

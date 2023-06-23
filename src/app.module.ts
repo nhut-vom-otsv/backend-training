@@ -17,7 +17,7 @@ import { FavoriteModule } from './modules/favorites/favorites.module';
 import { Favorite } from './modules/favorites/favorite.entity';
 import { CartModule } from './modules/carts/carts.module';
 import { Cart } from './modules/carts/cart.entity';
-import { AddressesModule } from './modules/addresses/addresses.module';
+import { AddressModule } from './modules/addresses/addresses.module';
 
 @Module({
   imports: [
@@ -47,7 +47,7 @@ import { AddressesModule } from './modules/addresses/addresses.module';
     RedisModule,
     FavoriteModule,
     CartModule,
-    AddressesModule,
+    AddressModule,
   ],
   providers: [CloudinaryService],
 })
